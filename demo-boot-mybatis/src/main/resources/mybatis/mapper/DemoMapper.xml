@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 指定命名空间-->
+<mapper namespace="com.penguin.springcloud.dao.DemoDao">
+
+    <select id="getParentById" parameterType="Long" resultType="com.penguin.springcloud.entities.demo.DemoParent">
+        select * from demoparent where p_id = #{id}
+    </select>
+
+    <insert id="addSon" parameterType="com.penguin.springcloud.entities.demo.DemoSon" useGeneratedKeys="true" keyProperty="s_id">
+        insert into demoson(s_value,p_id)  values(#{s_value},#{p_id});
+    </insert>
+
+
+    <select id="getAll"  resultMap="oneToPlusMap">
+        select p.p_id,p.p_value,s.s_id,s.s_value from demoparent p , demoson s
+        WHERE p.p_id = s.p_id
+    </select>
+
+    <resultMap id="oneToPlusMap" type="com.penguin.springcloud.entities.demo.DemoParent">
+        <result property="p_id" column="p_id"/>
+        <result property="p_value" column="p_value"/>
+        <collection property="sons" ofType="com.penguin.springcloud.entities.demo.DemoSon">
+            <result property="s_id" column="s_id"/>
+            <result property="s_value" column="s_value"/>
+        </collection>
+    </resultMap>
+
+
+</mapper>
